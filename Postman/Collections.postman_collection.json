@@ -1,0 +1,144 @@
+{
+	"info": {
+		"_postman_id": "ad58fde5-d958-45cc-9af1-9fb2217d0e02",
+		"name": "Collections",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27574822"
+	},
+	"item": [
+		{
+			"name": "PokeApi",
+			"item": [
+				{
+					"name": "GetPokemon",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"validateOK200(pm);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}pokemon/",
+							"host": [
+								"{{URL}}pokemon"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetGen3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"validateOK200(pm);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/pokemon/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"pokemon",
+								"1"
+							],
+							"query": [
+								{
+									"key": "3",
+									"value": "moves",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ReqApi",
+			"item": [
+				{
+					"name": "GetUsers",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "New Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"validateOK201(pm);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"morpheus\",\r\n    \"job\": \"leader\"\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}",
+							"host": [
+								"{{URL}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"validateOK201 = function (pm) { pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); }); }",
+					"",
+					"validateOK200 = function (pm) { pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); }); }"
+				]
+			}
+		}
+	]
+}
