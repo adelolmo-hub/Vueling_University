@@ -10,7 +10,7 @@
 			"name": "PokeApi",
 			"item": [
 				{
-					"name": "GetPokemon",
+					"name": "GetAllPokemon",
 					"event": [
 						{
 							"listen": "test",
@@ -26,25 +26,117 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}pokemon/",
+							"raw": "{{URL}}pokemon/?limit=1281",
 							"host": [
 								"{{URL}}pokemon"
 							],
 							"path": [
 								""
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "1281"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "GetGen3",
+					"name": "GetGen1",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"validateOK200(pm);\r",
+									"\r",
+									"var results = pm.response.json().results;\r",
+									"pm.test(\"Number of results\", function() {\r",
+									"    pm.expect(results.length).to.eql(151);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/pokemon?limit=151",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"pokemon"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "151"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetGholdengo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"validateOK200(pm);\r",
+									"\r",
+									"pm.test(\"Validate Pokemon name\", function(){\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(\"gholdengo\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/pokemon/1000",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"pokemon",
+								"1000"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "151",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetItems",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"validateOK200(pm);\r",
+									"\r",
+									"var results = pm.response.json().results;\r",
+									"pm.test(\"Number of results\", function() {\r",
+									"    pm.expect(results.length).to.eql(20);\r",
+									"});\r",
+									"\r",
 									""
 								],
 								"type": "text/javascript"
@@ -55,18 +147,17 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/pokemon/1",
+							"raw": "{{URL}}/item",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
-								"pokemon",
-								"1"
+								"item"
 							],
 							"query": [
 								{
-									"key": "3",
-									"value": "moves",
+									"key": "limit",
+									"value": "151",
 									"disabled": true
 								}
 							]
@@ -81,14 +172,31 @@
 			"item": [
 				{
 					"name": "GetUsers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"validateOK200(pm);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{URL}}user",
+							"host": [
+								"{{URL}}user"
+							]
+						}
 					},
 					"response": []
 				},
 				{
-					"name": "New Users",
+					"name": "NewUser",
 					"event": [
 						{
 							"listen": "test",
@@ -105,12 +213,51 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"morpheus\",\r\n    \"job\": \"leader\"\r\n}"
+							"raw": "{\r\n    \"name\": \"{{$randomFullName}}\",\r\n    \"job\": \"leader\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
-							"raw": "{{URL}}",
+							"raw": "{{URL}}user",
 							"host": [
-								"{{URL}}"
+								"{{URL}}user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NewRegister",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"validateOK200(pm);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"eve.holt@reqres.in\",\r\n    \"password\": \"pistol\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}register",
+							"host": [
+								"{{URL}}register"
 							]
 						}
 					},
