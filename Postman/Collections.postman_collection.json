@@ -10,160 +10,462 @@
 			"name": "PokeApi",
 			"item": [
 				{
-					"name": "GetAllPokemon",
-					"event": [
+					"name": "DeberesFinde",
+					"item": [
 						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"validateOK200(pm);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{URL}}pokemon/?limit=1281",
-							"host": [
-								"{{URL}}pokemon"
-							],
-							"path": [
-								""
-							],
-							"query": [
+							"name": "GetPokemonTypes",
+							"event": [
 								{
-									"key": "limit",
-									"value": "1281"
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Test validate OK\", validateOK200(pm));\r",
+											"\r",
+											"//pm.test(\"Prueba pokemon por tipos\", getAllTypes(pm.response.json()));\r",
+											"\r",
+											"pm.test(\"Ejemplo de prueba\", function () {\r",
+											"    let responseList = pm.response.json().results;\r",
+											"    for (let i = 0; i < responseList.length-2; i++) {\r",
+											"        console.log(responseList[i].url);\r",
+											"        pm.sendRequest({ method: 'GET', url: responseList[i].url}, function (err, response) {\r",
+											"            if (err) {\r",
+											"                console.error(err);\r",
+											"            } else {\r",
+											"                const responseBody = response.json();\r",
+											"                pm.expect(responseBody.pokemon.length).to.be.greaterThan(50);\r",
+											"            }\r",
+											"        });\r",
+											"    }\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"getAllTypes = function (Json) {\r",
+											"    for (let i = 0; i < Json.results.length; i++) {\r",
+											"        let typeURL = pm.environment.get(\"mainURL\") + 'type/' + i;\r",
+											"        pm.sendRequest({ method: 'GET', url: typeURL }, function (err, response) {\r",
+											"            console.log(\"Pestaña pre requests\");\r",
+											"            if (err) {\r",
+											"                console.error(err);\r",
+											"            } else {\r",
+											"                const responseBody = response.json();\r",
+											"                pm.expect(responseBody.pokemon.length).to.be.greaterThan(50);\r",
+											"            }\r",
+											"        });\r",
+											"    }\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
 								}
-							]
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/type",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"type"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "151",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetFastestPokemon",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"validateOK200(pm);\r",
+											"\r",
+											"let responseData = pm.response.json().results;\r",
+											"responseData.forEach(function (pokemon, index) {\r",
+											"pm.sendRequest({\r",
+											"    url: pokemon.url,\r",
+											"    method: \"GET\"\r",
+											"}, function (err, response) {\r",
+											"    if (err) {\r",
+											"        console.log(err);\r",
+											"    return;\r",
+											"    }\r",
+											"        let pokemonData = response.json();\r",
+											"        storeFastestPokemon(pokemonData);\r",
+											"        //solucion temporal\r",
+											"        if(index == responseData.length-1){\r",
+											"            pm.test(\"Test fastest pokemon\", fastestPokemonTest());\r",
+											"        }\r",
+											"    });\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var maxSpeed = 0;\r",
+											"var fastestPokemon = null;\r",
+											"\r",
+											"storeFastestPokemon = function(data){\r",
+											"    if(data.stats[5].base_stat>maxSpeed){\r",
+											"        maxSpeed=data.stats[5].base_stat;\r",
+											"        fastestPokemon=data;\r",
+											"        console.log(\"New fastestPokemon is \" + data.name);\r",
+											"    }\r",
+											"}\r",
+											"\r",
+											"fastestPokemonTest = function(){\r",
+											"    pm.expect(fastestPokemon.name).to.be.eql(\"charizard\");\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}pokemon?limit=10",
+									"host": [
+										"{{URL}}pokemon"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "GetGen1",
-					"event": [
+					"name": "EjerciciosInicio",
+					"item": [
 						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"validateOK200(pm);\r",
-									"\r",
-									"var results = pm.response.json().results;\r",
-									"pm.test(\"Number of results\", function() {\r",
-									"    pm.expect(results.length).to.eql(151);\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{URL}}/pokemon?limit=151",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"pokemon"
-							],
-							"query": [
+							"name": "GetAllPokemon",
+							"event": [
 								{
-									"key": "limit",
-									"value": "151"
+									"listen": "test",
+									"script": {
+										"exec": [
+											"validateOK200(pm);"
+										],
+										"type": "text/javascript"
+									}
 								}
-							]
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}pokemon/?limit=1281",
+									"host": [
+										"{{URL}}pokemon"
+									],
+									"path": [
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1281"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetGen1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"validateOK200(pm);\r",
+											"\r",
+											"var results = pm.response.json().results;\r",
+											"pm.test(\"Number of results\", function() {\r",
+											"    pm.expect(results.length).to.eql(151);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/pokemon?limit=151",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"pokemon"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "151"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetGholdengo",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"validateOK200(pm);\r",
+											"\r",
+											"pm.test(\"Validate Pokemon name\", function(){\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.name).to.eql(\"gholdengo\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/pokemon/1000",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"pokemon",
+										"1000"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "151",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetItems",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"validateOK200(pm);\r",
+											"\r",
+											"var results = pm.response.json().results;\r",
+											"pm.test(\"Number of results\", function() {\r",
+											"    pm.expect(results.length).to.eql(20);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/item",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"item"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "151",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "GetGholdengo",
-					"event": [
+					"name": "EjerciciosClase",
+					"item": [
 						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"validateOK200(pm);\r",
-									"\r",
-									"pm.test(\"Validate Pokemon name\", function(){\r",
-									"    const jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.name).to.eql(\"gholdengo\");\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{URL}}/pokemon/1000",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"pokemon",
-								"1000"
-							],
-							"query": [
+							"name": "GetPokemonAbility",
+							"event": [
 								{
-									"key": "limit",
-									"value": "151",
-									"disabled": true
+									"listen": "test",
+									"script": {
+										"exec": [
+											"validateOK200(pm);\r",
+											"\r",
+											"pm.test(\"Test to validate pokemon ability\", validateAbility(pm.response, \"pressure\"));\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"validateAbility = function(data, ability){\r",
+											"    let jsonData = data.json();\r",
+											"    pm.expect(jsonData.abilities[0].ability.name).to.eql(ability);\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
 								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GetItems",
-					"event": [
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/pokemon/150",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"pokemon",
+										"150"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "151",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
 						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"validateOK200(pm);\r",
-									"\r",
-									"var results = pm.response.json().results;\r",
-									"pm.test(\"Number of results\", function() {\r",
-									"    pm.expect(results.length).to.eql(20);\r",
-									"});\r",
-									"\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{URL}}/item",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"item"
-							],
-							"query": [
+							"name": "GetPokemonMoves",
+							"event": [
 								{
-									"key": "limit",
-									"value": "151",
-									"disabled": true
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Test validate OK\", validateOK200(pm));\r",
+											"\r",
+											"pm.test(\"Test to validate pokemon moves\", validateMoves(pm.response, 120,200));\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"validateMoves = function(data, movesMin, movesMax){\r",
+											"    let jsonData = data.json();\r",
+											"    pm.expect(jsonData.moves.length).to.be.within(movesMin,movesMax);\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
 								}
-							]
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/pokemon/150",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"pokemon",
+										"150"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "151",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetMove",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"validateOK200(pm);\r",
+											"\r",
+											"pm.test(\"Validate move type\", function(){\r",
+											"    const jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.type.name).to.eql(pm.environment.get(\"type_normal\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}{{move}}vice-grip",
+									"host": [
+										"{{URL}}{{move}}vice-grip"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "151",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				}
 			]
 		},
@@ -272,6 +574,10 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
+					"validateOK200 = function (pm) { ",
+					"    pm.response.to.have.status(200);",
+					"}",
+					"",
 					""
 				]
 			}
@@ -283,7 +589,7 @@
 				"exec": [
 					"validateOK201 = function (pm) { pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); }); }",
 					"",
-					"validateOK200 = function (pm) { pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); }); }"
+					"//validateOK200 = function (pm) { pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); }); }"
 				]
 			}
 		}
