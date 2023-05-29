@@ -1,0 +1,338 @@
+{
+	"info": {
+		"_postman_id": "d0af6aeb-c4b2-4af7-8803-09234c614ff1",
+		"name": "Regresion",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27574822"
+	},
+	"item": [
+		{
+			"name": "BooksApi",
+			"item": [
+				{
+					"name": "TC0OrderABook",
+					"item": [
+						{
+							"name": "1.AddUser",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"function generateRandomString(length) {\r",
+											"  const characters = 'abcdefghijklmnopqrstuvwxyz';\r",
+											"  let randomString = '';\r",
+											"  for (let i = 0; i < length; i++) {\r",
+											"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+											"    randomString += characters[randomIndex];\r",
+											"  }\r",
+											"  return randomString;\r",
+											"}\r",
+											"\r",
+											"function generateClientJSON() {\r",
+											"  const value = generateRandomString(4);\r",
+											"  const clientJSON = {\r",
+											"    \"clientName\": value,\r",
+											"    \"clientEmail\": value + \"@farebus.com\"\r",
+											"  };\r",
+											"  return clientJSON;\r",
+											"}\r",
+											"\r",
+											"const clientData = JSON.stringify(generateClientJSON());\r",
+											"console.log(clientData);\r",
+											"pm.environment.set('clientData', clientData);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Test status OK\", validateOK(pm));\r",
+											"\r",
+											"var responseJson = pm.response.json();\r",
+											"var token = responseJson.accessToken;\r",
+											"\r",
+											"// Guardar la ID del libro en una variable de entorno\r",
+											"pm.environment.set(\"token\", token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{{clientData}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}api-clients",
+									"host": [
+										"{{URL}}api-clients"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.GetABook",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"Test status\", validateOK(pm));\r",
+											"\r",
+											"pm.test(\"Validate JSON\", isJSON(pm));\r",
+											"\r",
+											"\r",
+											"var responseJson = pm.response.json();\r",
+											"var bookId = responseJson.id;\r",
+											"// Guardar la ID del libro en una variable de entorno\r",
+											"pm.environment.set(\"bookId\", bookId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}books/:bookId",
+									"host": [
+										"{{URL}}books"
+									],
+									"path": [
+										":bookId"
+									],
+									"variable": [
+										{
+											"key": "bookId",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.OrderABook",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Test status\", validateOK(pm));\r",
+											"\r",
+											"pm.test(\"Created Test\", validateCreated(pm));\r",
+											"\r",
+											"var responseJson = pm.response.json();\r",
+											"var orderId = responseJson.orderId;\r",
+											"\r",
+											"// Guardar la ID del libro en una variable de entorno\r",
+											"pm.environment.set(\"orderId\", orderId);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"validateCreated = function (pm) {\r",
+											"    pm.expect(pm.response.json().created).to.be.true;\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"bookId\": {{bookId}},\r\n    \"customerName\": \"{{clientData.name}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/orders",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "4.CheckTheOrder",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Test status\", validateOK(pm));\r",
+											"\r",
+											"pm.test(\"Test order Id\", validateOrderID(pm));"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"validateOrderID = function (pm) {\r",
+											"    pm.expect(pm.response.json().id).to.eql(pm.environment.get(\"orderId\"));\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}orders/:orderId",
+									"host": [
+										"{{URL}}orders"
+									],
+									"path": [
+										":orderId"
+									],
+									"variable": [
+										{
+											"key": "orderId",
+											"value": "{{orderId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GetApiStatus",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test validate OK\", validateOK(pm));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}status",
+							"host": [
+								"{{URL}}status"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"validateOK = function (pm) { ",
+					"    pm.expect(pm.response.code).to.be.within(200, 299);",
+					"}",
+					"",
+					"isJSON = function(pm) {",
+					"   const responseJson = pm.response.json();",
+					"    pm.expect(responseJson).to.be.an('object');",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
