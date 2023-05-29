@@ -10,7 +10,266 @@
 			"name": "BooksApi",
 			"item": [
 				{
-					"name": "TC0OrderABook",
+					"name": "StandAloneTests",
+					"item": [
+						{
+							"name": "GetApiStatus",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Test validate OK\", validateOK(pm));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}status",
+									"host": [
+										"{{URL}}status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create User",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"function generateRandomString(length) {\r",
+											"  const characters = 'abcdefghijklmnopqrstuvwxyz';\r",
+											"  let randomString = '';\r",
+											"  for (let i = 0; i < length; i++) {\r",
+											"    const randomIndex = Math.floor(Math.random() * characters.length);\r",
+											"    randomString += characters[randomIndex];\r",
+											"  }\r",
+											"  return randomString;\r",
+											"}\r",
+											"\r",
+											"function generateClientJSON() {\r",
+											"  const value = generateRandomString(4);\r",
+											"  const clientJSON = {\r",
+											"    \"clientName\": value,\r",
+											"    \"clientEmail\": value + \"@farebus.com\"\r",
+											"  };\r",
+											"  return clientJSON;\r",
+											"}\r",
+											"\r",
+											"const clientData = JSON.stringify(generateClientJSON());\r",
+											"console.log(clientData);\r",
+											"pm.environment.set('clientData', clientData);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Test status OK\", validateOK(pm));\r",
+											"\r",
+											"var responseJson = pm.response.json();\r",
+											"var token = responseJson.accessToken;\r",
+											"\r",
+											"// Guardar la ID del libro en una variable de entorno\r",
+											"pm.environment.set(\"token\", token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{{clientData}}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}api-clients",
+									"host": [
+										"{{URL}}api-clients"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetAllBooks",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = JSON.parse(responseBody);\r",
+											"\r",
+											"pm.test(\"Status Test\", validateOK(pm));\r",
+											"pm.test(\"Response not empty\", function() {pm.expect(response.length).be.greaterThan(0);});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"thereAreAvBooks\", false);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}books",
+									"host": [
+										"{{URL}}books"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "MakeAnOrder",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Test status\", validateOK(pm));\r",
+											"\r",
+											"pm.test(\"Created Test\", validateCreated(pm));\r",
+											"\r",
+											"var responseJson = pm.response.json();\r",
+											"var orderId = responseJson.orderId;\r",
+											"\r",
+											"// Guardar la ID del libro en una variable de entorno\r",
+											"pm.environment.set(\"orderId\", orderId);"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"validateCreated = function (pm) {\r",
+											"    pm.expect(pm.response.json().created).to.be.true;\r",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"bookId\": {{bookId}},\r\n    \"customerName\": \"{{clientData.clientName}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}orders",
+									"host": [
+										"{{URL}}orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetAllOrders",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = JSON.parse(responseBody);\r",
+											"\r",
+											"pm.test(\"Status Test\", validateOK(pm));\r",
+											"pm.test(\"Response not empty\", function() {pm.expect(response.length).be.greaterThan(0);});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}orders",
+									"host": [
+										"{{URL}}orders"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TC1 - Order A Book",
 					"item": [
 						{
 							"name": "1.AddUser",
@@ -173,7 +432,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"bookId\": {{bookId}},\r\n    \"customerName\": \"{{clientData.name}}\"\r\n}",
+									"raw": "{\r\n    \"bookId\": {{bookId}},\r\n    \"customerName\": \"{{clientData.clientName}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -201,7 +460,8 @@
 										"exec": [
 											"pm.test(\"Test status\", validateOK(pm));\r",
 											"\r",
-											"pm.test(\"Test order Id\", validateOrderID(pm));"
+											"pm.test(\"Test order Id\", validateOrderID(pm));\r",
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -210,8 +470,175 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"validateOrderID = function (pm) {\r",
-											"    pm.expect(pm.response.json().id).to.eql(pm.environment.get(\"orderId\"));\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}orders/:orderId",
+									"host": [
+										"{{URL}}orders"
+									],
+									"path": [
+										":orderId"
+									],
+									"variable": [
+										{
+											"key": "orderId",
+											"value": "{{orderId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TC2 - Update User",
+					"item": [
+						{
+							"name": "1.GetAnOrder",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"Test status\", validateOK(pm));\r",
+											"\r",
+											"pm.test(\"Test order Id\", validateOrderID(pm));\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}orders/:orderId",
+									"host": [
+										"{{URL}}orders"
+									],
+									"path": [
+										":orderId"
+									],
+									"variable": [
+										{
+											"key": "orderId",
+											"value": "{{orderId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2.UpdateCustomerInOrder",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Test status\", validateOK(pm));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"customerName\": \"{{newCustomer}}\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}orders/:id",
+									"host": [
+										"{{URL}}orders"
+									],
+									"path": [
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{orderId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.CheckTheChanges",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"Test status\", validateOK(pm));\r",
+											"\r",
+											"pm.test(\"Test order Id\", validateOrderID(pm));\r",
+											"\r",
+											"pm.test(\"Test customer name\", validateCustomer(pm));\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"validateCustomer = function (pm) {\r",
+											"    pm.expect(pm.response.json().customerName).to.eql(pm.environment.get(\"newCustomer\"));\r",
 											"}"
 										],
 										"type": "text/javascript"
@@ -252,38 +679,161 @@
 					]
 				},
 				{
-					"name": "GetApiStatus",
-					"event": [
+					"name": "TC3 - Delete an Order",
+					"item": [
 						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
+							"name": "1.GetAnOrder",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"Test status\", validateOK(pm));\r",
+											"\r",
+											"pm.test(\"Test order Id\", validateOrderID(pm));\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}orders/:orderId",
+									"host": [
+										"{{URL}}orders"
+									],
+									"path": [
+										":orderId"
+									],
+									"variable": [
+										{
+											"key": "orderId",
+											"value": "{{orderId}}"
+										}
+									]
+								}
+							},
+							"response": []
 						},
 						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Test validate OK\", validateOK(pm));"
-								],
-								"type": "text/javascript"
-							}
+							"name": "2.DeleteAnOrder",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Validate Status\", validateOK(pm));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}orders/:orderId",
+									"host": [
+										"{{URL}}orders"
+									],
+									"path": [
+										":orderId"
+									],
+									"variable": [
+										{
+											"key": "orderId",
+											"value": "{{orderId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.CheckTheOrderIsGone",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"Test status\", validate404(pm));\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"validate404 = function (pm) { \r",
+											"    pm.expect(pm.response.code).to.be.eql(404);\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}orders/:orderId",
+									"host": [
+										"{{URL}}orders"
+									],
+									"path": [
+										":orderId"
+									],
+									"variable": [
+										{
+											"key": "orderId",
+											"value": "{{orderId}}"
+										}
+									]
+								}
+							},
+							"response": []
 						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{URL}}status",
-							"host": [
-								"{{URL}}status"
-							]
-						}
-					},
-					"response": []
+					]
 				}
 			],
 			"event": [
@@ -321,6 +871,10 @@
 					"isJSON = function(pm) {",
 					"   const responseJson = pm.response.json();",
 					"    pm.expect(responseJson).to.be.an('object');",
+					"}",
+					"",
+					"validateOrderID = function (pm) {",
+					"    pm.expect(pm.response.json().id).to.eql(pm.environment.get(\"orderId\"));",
 					"}"
 				]
 			}
