@@ -25,6 +25,11 @@ namespace ProductStore.WebPages
             get { return WebDriver.FindElementById("cartur"); }
         }
 
+        private IWebElement btnHome
+        {
+            get { return WebDriver.FindElementById("nava"); }
+        }
+
 
         public void addToCart()
         {
@@ -34,7 +39,16 @@ namespace ProductStore.WebPages
             alert.Accept();
             btnCart.Click();
         }
-       
+
+        public void addToCartAndBuyAgain()
+        {
+            btnBuy.Click();
+            WebDriverWait wait = new WebDriverWait(WebDriver, TimeSpan.FromSeconds(10));
+            IAlert alert = wait.Until(ExpectedConditions.AlertIsPresent());
+            alert.Accept();
+            btnHome.Click();
+        }
+
     }
 
 }

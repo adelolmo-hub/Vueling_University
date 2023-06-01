@@ -18,9 +18,14 @@ namespace ProductStore.WebPages
         }
         protected override IWebElement ApartadosBusqueda => throw new System.NotImplementedException();
 
+
+        private By btn_PlaceOrder
+        {
+            get { return By.XPath("//button[text() = 'Place Order']");  }
+        }
         private IWebElement btnPlaceOrder
         {
-            get { return WebDriver.FindElementByXPath("//button[text() = 'Place Order']"); }
+            get { return WebDriver.FindElement(btn_PlaceOrder); }
         }
         private IWebElement btnPurchase
         {
@@ -64,6 +69,10 @@ namespace ProductStore.WebPages
 
         public void placeOrder()
         {
+            // new WebDriverWait(WebDriver, TimeSpan.FromSeconds(WaitTimeout))
+            //    .Until(CustomExpectedConditions.ElementIsVisible(btn_PlaceOrder));
+            //No lo he podido arreglar de otra manera. Lo siento Agus
+            Thread.Sleep(2000);
             btnPlaceOrder.Click();
             inputName.SendKeys("name");
             inputCountry.SendKeys("country");
@@ -74,6 +83,14 @@ namespace ProductStore.WebPages
             btnPurchase.Click();
             Assert.IsTrue(btnOK.Displayed, "El mensaje de compra se muestra correctamente");
             btnOK.Click();
+        }
+
+        public void findDeleteButtonAndClick(String productName)
+        {
+            IWebElement productElement = WebDriver.FindElementByXPath("//td[text()='" + productName + "']");
+            IWebElement productColumn = productElement.FindElement(By.XPath("./ancestor::tr"));
+            IWebElement deleteButton = productColumn.FindElement(By.XPath(".//a[contains(@onclick, 'deleteItem')]"));
+            deleteButton.Click();
         }
     }
 

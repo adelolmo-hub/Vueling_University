@@ -9,6 +9,7 @@ namespace Vueling.Auto.Template.Tests
     class TestCompra : TestSetCleanBase
     {
         string username = "a.o";
+
         [TestCase(1)]
         public void testBuyLaptop(int scenario)
         {
@@ -37,7 +38,7 @@ namespace Vueling.Auto.Template.Tests
 
             homePage.logIn();
             logInPage.addInfoLogIn(username, "a");
-            homePage.searchLaptops("Nokia lumia 1520", username);
+            homePage.searchPhones("Nokia lumia 1520", username);
             productPage.addToCart();
             cartPage.placeOrder();
         }
@@ -55,6 +56,24 @@ namespace Vueling.Auto.Template.Tests
             logInPage.addInfoLogIn(username, "a");
             homePage.searchMonitor("Apple monitor 24", username);
             productPage.addToCart();
+            cartPage.placeOrder();
+        }
+
+        [TestCase(1)]
+        public void testBuyProductsAndDelete(int scenario)
+        {
+            homePage = new HomePage(setUpWebDriver);
+            logInPage = new LogInPage(setUpWebDriver);
+            productPage = new ProductPage(setUpWebDriver);
+            cartPage = new CartPage(setUpWebDriver);
+
+            homePage.logIn();
+            logInPage.addInfoLogIn(username, "a");
+            homePage.searchPhones("Nokia lumia 1520", username);
+            productPage.addToCartAndBuyAgain();
+            homePage.searchLaptops("Sony vaio i5", username);
+            productPage.addToCart();
+            cartPage.findDeleteButtonAndClick("Sony vaio i5");
             cartPage.placeOrder();
         }
     }
