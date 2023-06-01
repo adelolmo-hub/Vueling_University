@@ -69,7 +69,7 @@ namespace Vueling.Auto.Template.Tests
         #endregion
         protected HomePage homePage;
         protected LogInPage logInPage;
-        protected LaptopPage laptopPage;
+        protected ProductPage productPage;
         protected CartPage cartPage;
 
         [SetUp]

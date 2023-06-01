@@ -151,7 +151,7 @@
     <Compile Include="WebPages.Base\CommonPage.cs" />
     <Compile Include="WebPages.Base\Page.cs" />
     <Compile Include="WebPages\CartPage.cs" />
-    <Compile Include="WebPages\LaptopPage.cs" />
+    <Compile Include="WebPages\ProductPage.cs" />
     <Compile Include="WebPages\LogInPage.cs" />
     <Compile Include="WebPages\HomePage.cs" />
     <Compile Include="WebPages\GooglePage.cs" />

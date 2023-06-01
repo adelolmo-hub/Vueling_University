@@ -9,9 +9,9 @@ using Vueling.Auto.Template.Common;
 
 namespace ProductStore.WebPages
 {
-    public class LaptopPage : CommonPage
+    public class ProductPage : CommonPage
     {
-        public LaptopPage(ISetUpWebDriver setUpWebDriver) : base(setUpWebDriver)
+        public ProductPage(ISetUpWebDriver setUpWebDriver) : base(setUpWebDriver)
         { 
         }
         protected override IWebElement ApartadosBusqueda => throw new System.NotImplementedException();
@@ -29,6 +29,9 @@ namespace ProductStore.WebPages
         public void addToCart()
         {
             btnBuy.Click();
+            WebDriverWait wait = new WebDriverWait(WebDriver, TimeSpan.FromSeconds(10));
+            IAlert alert = wait.Until(ExpectedConditions.AlertIsPresent());
+            alert.Accept();
             btnCart.Click();
         }
        

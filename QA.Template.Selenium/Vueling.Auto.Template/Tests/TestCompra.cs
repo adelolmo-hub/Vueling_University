@@ -16,13 +16,13 @@ namespace Vueling.Auto.Template.Tests
 
             homePage = new HomePage(setUpWebDriver);
             logInPage = new LogInPage(setUpWebDriver);
-            laptopPage = new LaptopPage(setUpWebDriver);
+            productPage = new ProductPage(setUpWebDriver);
             cartPage = new CartPage(setUpWebDriver);
 
             homePage.logIn();
             logInPage.addInfoLogIn(username, "a");
             homePage.searchLaptops("Sony vaio i5", username);
-            laptopPage.addToCart();
+            productPage.addToCart();
             cartPage.placeOrder();
         }
 
@@ -32,13 +32,13 @@ namespace Vueling.Auto.Template.Tests
            
             homePage = new HomePage(setUpWebDriver);
             logInPage = new LogInPage(setUpWebDriver);
-            laptopPage = new LaptopPage(setUpWebDriver);
+            productPage = new ProductPage(setUpWebDriver);
             cartPage = new CartPage(setUpWebDriver);
 
             homePage.logIn();
             logInPage.addInfoLogIn(username, "a");
-            homePage.searchLaptops("Sony vaio i5", username);
-            laptopPage.addToCart();
+            homePage.searchLaptops("Nokia lumia 1520", username);
+            productPage.addToCart();
             cartPage.placeOrder();
         }
 
@@ -48,13 +48,13 @@ namespace Vueling.Auto.Template.Tests
 
             homePage = new HomePage(setUpWebDriver);
             logInPage = new LogInPage(setUpWebDriver);
-            laptopPage = new LaptopPage(setUpWebDriver);
+            productPage = new ProductPage(setUpWebDriver);
             cartPage = new CartPage(setUpWebDriver);
 
             homePage.logIn();
             logInPage.addInfoLogIn(username, "a");
-            homePage.searchLaptops("Sony vaio i5", username);
-            laptopPage.addToCart();
+            homePage.searchMonitor("Apple monitor 24", username);
+            productPage.addToCart();
             cartPage.placeOrder();
         }
     }

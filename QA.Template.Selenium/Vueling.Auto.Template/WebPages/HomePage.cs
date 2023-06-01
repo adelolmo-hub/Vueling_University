@@ -58,15 +58,23 @@ namespace ProductStore.WebPages
         {
             get { return WebDriver.FindElementByXPath("//a[text() = 'Laptops']"); }
         }
+        private IWebElement btnPhone
+        {
+            get { return WebDriver.FindElementByXPath("//a[text() = 'Phones']"); }
+        }
+        private IWebElement btnMonitor
+        {
+            get { return WebDriver.FindElementByXPath("//a[text() = 'Monitors']"); }
+        }
 
         private IWebElement btnWelcome
         {
             get { return WebDriver.FindElementById("nameofuser"); }
         }
 
-        private IWebElement findLaptop(String laptopName)
+        private IWebElement findProduct(String productName)
         {
-            return WebDriver.FindElementByXPath("//a[text()='" + laptopName + "']");
+            return WebDriver.FindElementByXPath("//a[text()='" + productName + "']");
         }
 
         public HomePage logIn()
@@ -81,7 +89,24 @@ namespace ProductStore.WebPages
                 .Until(CustomExpectedConditions.ElementIsVisible(btnLogOut));
             Assert.AreEqual(btnWelcome.Text, "Welcome " + username, "El nombre de usuario no coincide");
             btnLaptop.Click();
-            findLaptop(laptopName).Click(); 
+            findProduct(laptopName).Click(); 
+        }
+        public void searchPhones(String phoneName, String username)
+        {
+            new WebDriverWait(WebDriver, TimeSpan.FromSeconds(WaitTimeout))
+                .Until(CustomExpectedConditions.ElementIsVisible(btnLogOut));
+            Assert.AreEqual(btnWelcome.Text, "Welcome " + username, "El nombre de usuario no coincide");
+            btnPhone.Click();
+            findProduct(phoneName).Click();
+        }
+
+        public void searchMonitor(String monitorName, String username)
+        {
+            new WebDriverWait(WebDriver, TimeSpan.FromSeconds(WaitTimeout))
+                .Until(CustomExpectedConditions.ElementIsVisible(btnLogOut));
+            Assert.AreEqual(btnWelcome.Text, "Welcome " + username, "El nombre de usuario no coincide");
+            btnMonitor.Click();
+            findProduct(monitorName).Click();
         }
 
     }

@@ -16,6 +16,10 @@ namespace ProductStore.WebPages
         }
         protected override IWebElement ApartadosBusqueda => throw new System.NotImplementedException();
 
+        private By input_userName
+        {
+            get { return By.Id("loginusername"); }
+        }
         private IWebElement inputUsername
         {
             get { return WebDriver.FindElementById("loginusername"); }
@@ -37,6 +41,8 @@ namespace ProductStore.WebPages
 
         public LogInPage addInfoLogIn(String name, String password)
         {
+            new WebDriverWait(WebDriver, TimeSpan.FromSeconds(WaitTimeout))
+                .Until(CustomExpectedConditions.ElementIsVisible(input_userName));
             inputUsername.SendKeys(name);
             inputPassword.SendKeys(password);
             btnLogin.Click();
