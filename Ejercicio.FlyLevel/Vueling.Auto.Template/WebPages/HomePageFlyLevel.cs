@@ -6,6 +6,7 @@ using Albert.Auto.Template.Webpages;
 using OpenQA.Selenium.Support.UI;
 using System;
 using Albert.Auto.Template.Common;
+using NUnit.Framework;
 
 namespace Albert.WebPages
 {
@@ -24,6 +25,11 @@ namespace Albert.WebPages
         private IWebElement inputOrigin
         {
             get { return WebDriver.FindElement(input_origin); }
+        }
+
+        private IWebElement inputDestination
+        {
+            get { return WebDriver.FindElementByXPath("//div[@data-field = 'destination']"); }
         }
         private IWebElement inputAirport(string name)
         {
@@ -60,6 +66,18 @@ namespace Albert.WebPages
         {
             get { return WebDriver.FindElementByXPath("//div[@data-field='infant']//span[@class='icon-plus pax-icon']"); }
         }
+
+        private IWebElement departureDate
+        {
+            get { return WebDriver.FindElementByXPath("//div[@class = 'departure-date']"); }
+        }
+
+        private IWebElement returnDate
+        {
+            get { return WebDriver.FindElementByXPath("//*[@id=\"searcher\"]/div[2]/div[2]/p"); }
+        }
+
+
 
         public void addInfoFlight (DateTime ida, DateTime vuelta)
         {
@@ -150,7 +168,20 @@ namespace Albert.WebPages
             btnPlusChild.Click();
             btnPlusBaby.Click();
             btnPlusAdult.Click();
+            assertTheSearch();
             btnSearch.Click();
+        }
+
+        public void assertTheSearch()
+        {
+            string[] originDivided = inputOrigin.Text.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            string[] destinationDivided = inputDestination.Text.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+
+            Assert.AreEqual(originDivided[originDivided.Length - 1], "Santiago De Chile","Check the origin");
+            Assert.AreEqual(destinationDivided[destinationDivided.Length - 1], "Barcelona", "Check the destination");
+
+            Assert.AreEqual(departureDate.Text,"Vie, 1 Sept","Check the departure Date");
+            Assert.AreEqual(returnDate.Text, "Mar, 12 Sept", "Check the return Date");
         }
     }
 
