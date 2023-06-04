@@ -70,6 +70,7 @@ namespace Albert.Auto.Template.Tests
         protected RegisterPage registerPage;
         protected InsecureConexionPage insecureConexionPage;
         protected LogInPage logInPage;
+        protected CheckOutPage checkOutPage;
 
         [SetUp]
         public void TestSetUp()

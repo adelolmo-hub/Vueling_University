@@ -1,7 +1,12 @@
-﻿using Albert.Auto.Template.SetUp;
+﻿using Albert.Auto.Template.Common;
+using Albert.Auto.Template.SetUp;
 using Albert.Auto.Template.WebPages.Base;
+using NUnit.Framework;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using System;
 using System.Threading;
+using System.Xml.Linq;
 
 namespace Albert.Auto.Template.Webpages
 {
@@ -29,10 +34,26 @@ namespace Albert.Auto.Template.Webpages
         {
             get { return WebDriver.FindElementByXPath("//a[@class = 'dropdown-toggle' and text() = 'Desktops']");  }
         }
+
+        private IWebElement btnMac
+        {
+            get { return WebDriver.FindElementByXPath("//a[text() = 'Mac (1)']"); }
+        }
+
         private IWebElement btnAddCart
         {
-            get { return WebDriver.FindElementByXPath("//i[@class = 'fa fa-caret-down']");  }
+            get { return WebDriver.FindElementByXPath("//*[@id=\"content\"]/div[2]/div/div/div[2]/div[2]/button[1]");  }
         }
+        
+        private IWebElement alertSucces
+        {
+            get { return WebDriver.FindElementByXPath("//div[@class='alert alert-success alert-dismissible']"); }
+        }
+        private IWebElement btnCheckOut
+        {
+            get { return WebDriver.FindElementByXPath("//*[@id=\"top-links\"]/ul/li[5]/a"); }
+        }
+
 
         protected override IWebElement ApartadosBusqueda => throw new System.NotImplementedException();
 
@@ -61,8 +82,14 @@ namespace Albert.Auto.Template.Webpages
         public HomePage addToCart()
         {
             btnDesktops.Click();
-            Thread.Sleep(2000);
+            btnMac.Click();
+            btnAddCart.Click();
+           
+            Assert.IsTrue(alertSucces.Displayed, "El elemento está visible");
+            btnCheckOut.Click();
             return this;
         }
+
+
     }
 }

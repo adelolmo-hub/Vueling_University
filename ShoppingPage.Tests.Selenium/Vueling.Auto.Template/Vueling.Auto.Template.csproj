@@ -149,6 +149,7 @@
     <Compile Include="Tests\TestBase.cs" />
     <Compile Include="WebPages.Base\CommonPage.cs" />
     <Compile Include="WebPages.Base\Page.cs" />
+    <Compile Include="WebPages\CheckOutPage.cs" />
     <Compile Include="WebPages\LogInPage.cs" />
     <Compile Include="WebPages\InsecureConexionPage.cs" />
     <Compile Include="WebPages\RegisterPage.cs" />

@@ -37,10 +37,13 @@ namespace Albert.Auto.Template.Webpages
         {
             get { return WebDriver.FindElementByXPath("//*[@id=\"content\"]/h2[1]"); }
         }
-
+        private IWebElement btnHome
+        {
+            get { return WebDriver.FindElementByXPath("//div[@id='logo']/h1/a"); }
+        }
 
         //Define functions and actions
-        
+
         public LogInPage completeLogIn(string email, string password)
         {
             inputEmail.SendKeys(email);
@@ -49,6 +52,8 @@ namespace Albert.Auto.Template.Webpages
             btnLogin.Click();
 
             Assert.AreEqual("My Account", textContent.Text);
+
+            btnHome.Click();
             return this;
         }
     }

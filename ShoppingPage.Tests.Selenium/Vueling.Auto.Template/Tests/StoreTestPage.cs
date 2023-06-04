@@ -8,8 +8,10 @@ namespace Albert.Auto.Template.Tests
     [TestFixture]
     class StoreTestPage : TestSetCleanBase
     {
-        
-        [TestCase(1)]
+        string logInemail = "a123456@a.com";
+        string logInpassword = "aaaa";
+
+        [TestCase(1), Order(1)]
         public void RegisterTest(int scenario)
         {
             string name = "A";
@@ -27,11 +29,10 @@ namespace Albert.Auto.Template.Tests
             registerPage.completeRegisterForm(name,lastName,email,telephone,password);
         }
 
-        [TestCase(1)]
+        [TestCase(1), Order(2)]
         public void LogInTest(int scenario)
         {
-            string email = "a123456@a.com";
-            string password = "aaaa";
+           
 
             homePage = new HomePage(setUpWebDriver);
             insecureConexionPage = new InsecureConexionPage(setUpWebDriver);
@@ -39,17 +40,26 @@ namespace Albert.Auto.Template.Tests
 
             homePage.logInClick();
             insecureConexionPage.skipInsecureConexion();
-            logInPage.completeLogIn(email, password);
-            Thread.Sleep(10000);
+            logInPage.completeLogIn(logInemail, logInpassword);
 
         }
 
-        [TestCase(1)]
+        [TestCase(1), Order(3)]
         public void buyAProductTest(int scenario)
         {
             homePage = new HomePage(setUpWebDriver);
+            insecureConexionPage = new InsecureConexionPage(setUpWebDriver);
+            logInPage = new LogInPage(setUpWebDriver);
+            checkOutPage = new CheckOutPage(setUpWebDriver);
+
+            homePage.logInClick();
+            insecureConexionPage.skipInsecureConexion();
+            logInPage.completeLogIn(logInemail, logInpassword);
 
             homePage.addToCart();
+            checkOutPage.addBillingDetails();
+            checkOutPage.confirmButtons();
+            Thread.Sleep(1000);
         }
     }
 
