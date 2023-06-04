@@ -49,10 +49,26 @@ namespace Albert.Auto.Template.Webpages
         {
             get { return WebDriver.FindElementByXPath("//div[@class='alert alert-success alert-dismissible']"); }
         }
+
+        private By btn_checkOut
+        {
+            get { return By.XPath("//a[@title = 'Checkout']"); }
+        }
         private IWebElement btnCheckOut
         {
-            get { return WebDriver.FindElementByXPath("//*[@id=\"top-links\"]/ul/li[5]/a"); }
+            get { return WebDriver.FindElement(btn_checkOut); }
         }
+
+        private By btn_cart
+        {
+            get { return By.XPath("//a[@title = 'Shopping Cart']"); }
+        }
+        private IWebElement btnCart
+        {
+            get { return WebDriver.FindElement(btn_cart); }
+        }
+
+
 
 
         protected override IWebElement ApartadosBusqueda => throw new System.NotImplementedException();
@@ -86,9 +102,26 @@ namespace Albert.Auto.Template.Webpages
             btnAddCart.Click();
            
             Assert.IsTrue(alertSucces.Displayed, "El elemento está visible");
+            
+            return this;
+        }
+
+        public HomePage goToCheckOut()
+        {
+            new WebDriverWait(WebDriver, TimeSpan.FromSeconds(10))
+                .Until(CustomExpectedConditions.ElementIsClickable(btn_checkOut));
             btnCheckOut.Click();
             return this;
         }
+        public HomePage goToCart()
+        {
+            new WebDriverWait(WebDriver, TimeSpan.FromSeconds(10))
+                .Until(CustomExpectedConditions.ElementIsClickable(btn_cart));
+            btnCart.Click();
+            return this;
+
+        }
+
 
 
     }

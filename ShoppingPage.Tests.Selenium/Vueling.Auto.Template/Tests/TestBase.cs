@@ -71,6 +71,7 @@ namespace Albert.Auto.Template.Tests
         protected InsecureConexionPage insecureConexionPage;
         protected LogInPage logInPage;
         protected CheckOutPage checkOutPage;
+        protected CartPage cartPage;
 
         [SetUp]
         public void TestSetUp()

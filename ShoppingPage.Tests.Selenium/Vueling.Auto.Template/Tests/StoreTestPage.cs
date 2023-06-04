@@ -57,10 +57,33 @@ namespace Albert.Auto.Template.Tests
             logInPage.completeLogIn(logInemail, logInpassword);
 
             homePage.addToCart();
+            homePage.goToCheckOut();
             checkOutPage.addBillingDetails();
             checkOutPage.confirmButtons();
-            Thread.Sleep(1000);
+            
         }
+
+        [TestCase(1), Order(4)]
+        public void selectAnItemAndDelete(int scenario)
+        {
+
+            homePage = new HomePage(setUpWebDriver);
+            insecureConexionPage = new InsecureConexionPage(setUpWebDriver);
+            logInPage = new LogInPage(setUpWebDriver);
+            cartPage = new CartPage(setUpWebDriver);
+            
+
+            homePage.logInClick();
+            insecureConexionPage.skipInsecureConexion();
+            logInPage.completeLogIn(logInemail, logInpassword);
+            homePage.addToCart();
+            homePage.goToCart();
+            cartPage.deleteProduct();
+            
+
+
+        }
+
     }
 
 }
