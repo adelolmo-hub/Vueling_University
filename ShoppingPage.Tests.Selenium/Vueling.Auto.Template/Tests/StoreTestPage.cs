@@ -32,8 +32,6 @@ namespace Albert.Auto.Template.Tests
         [TestCase(1), Order(2)]
         public void LogInTest(int scenario)
         {
-           
-
             homePage = new HomePage(setUpWebDriver);
             insecureConexionPage = new InsecureConexionPage(setUpWebDriver);
             logInPage = new LogInPage(setUpWebDriver);
@@ -45,7 +43,7 @@ namespace Albert.Auto.Template.Tests
         }
 
         [TestCase(1), Order(3)]
-        public void buyAProductTest(int scenario)
+        public void buyAMacTest(int scenario)
         {
             homePage = new HomePage(setUpWebDriver);
             insecureConexionPage = new InsecureConexionPage(setUpWebDriver);
@@ -56,14 +54,32 @@ namespace Albert.Auto.Template.Tests
             insecureConexionPage.skipInsecureConexion();
             logInPage.completeLogIn(logInemail, logInpassword);
 
-            homePage.addToCart();
+            homePage.addMacToCart();
             homePage.goToCheckOut();
             checkOutPage.addBillingDetails();
             checkOutPage.confirmButtons();
             
         }
-
         [TestCase(1), Order(4)]
+        public void buyATabletTest(int scenario)
+        {
+            homePage = new HomePage(setUpWebDriver);
+            insecureConexionPage = new InsecureConexionPage(setUpWebDriver);
+            logInPage = new LogInPage(setUpWebDriver);
+            checkOutPage = new CheckOutPage(setUpWebDriver);
+
+            homePage.logInClick();
+            insecureConexionPage.skipInsecureConexion();
+            logInPage.completeLogIn(logInemail, logInpassword);
+
+            homePage.addTabletToCart();
+            homePage.goToCheckOut();
+            checkOutPage.addBillingDetails();
+            checkOutPage.confirmButtons();
+
+        }
+
+        [TestCase(1), Order(5)]
         public void selectAnItemAndDelete(int scenario)
         {
 
@@ -76,13 +92,21 @@ namespace Albert.Auto.Template.Tests
             homePage.logInClick();
             insecureConexionPage.skipInsecureConexion();
             logInPage.completeLogIn(logInemail, logInpassword);
-            homePage.addToCart();
+            homePage.addMacToCart();
             homePage.goToCart();
             cartPage.deleteProduct();
             
+        }
+        [TestCase(1), Order(6)]
+        public void TestCheckSponsor(int scenario)
+        {
+            string sponsor = "Nintendo";
+            homePage = new HomePage(setUpWebDriver);
 
+            homePage.checkSponsorExists(sponsor);
 
         }
+
 
     }
 

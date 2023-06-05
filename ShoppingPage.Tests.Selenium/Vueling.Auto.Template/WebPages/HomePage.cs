@@ -39,6 +39,14 @@ namespace Albert.Auto.Template.Webpages
         {
             get { return WebDriver.FindElementByXPath("//a[text() = 'Mac (1)']"); }
         }
+        private IWebElement btnTablet
+        {
+            get { return WebDriver.FindElementByXPath("//a[text() = 'Tablets']"); }
+        }
+        private IWebElement btnAddTabletToCart
+        {
+            get { return WebDriver.FindElementByXPath("//*[@id=\"content\"]/div[2]/div/div/div[2]/div[2]/button[1]"); }
+        }
 
         private IWebElement btnAddCart
         {
@@ -67,6 +75,8 @@ namespace Albert.Auto.Template.Webpages
         {
             get { return WebDriver.FindElement(btn_cart); }
         }
+      
+       
 
 
 
@@ -95,7 +105,7 @@ namespace Albert.Auto.Template.Webpages
             return this;
         }
 
-        public HomePage addToCart()
+        public HomePage addMacToCart()
         {
             btnDesktops.Click();
             btnMac.Click();
@@ -105,6 +115,17 @@ namespace Albert.Auto.Template.Webpages
             
             return this;
         }
+
+        public HomePage addTabletToCart()
+        {
+            btnTablet.Click();
+            btnAddTabletToCart.Click();
+
+            Assert.IsTrue(alertSucces.Displayed, "El elemento está visible");
+
+            return this;
+        }
+
 
         public HomePage goToCheckOut()
         {
@@ -119,7 +140,14 @@ namespace Albert.Auto.Template.Webpages
                 .Until(CustomExpectedConditions.ElementIsClickable(btn_cart));
             btnCart.Click();
             return this;
-
+        }
+        public void checkSponsorExists(String name)
+        {
+            // Verify if the name of the sponsor matches the
+            // 'alt' attribute of an image element located inside the 'carousel0' div.
+            Assert.AreEqual(name, 
+                WebDriver.FindElementByXPath("//div[@id='carousel0']//img[contains(@alt, '" + name + "')]")
+                .GetAttribute("alt"));
         }
 
 
