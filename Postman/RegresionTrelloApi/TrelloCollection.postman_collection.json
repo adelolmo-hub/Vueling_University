@@ -716,6 +716,228 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "TC1 - Create Board, Add Associated List, and Add Card",
+			"item": [
+				{
+					"name": "1. Create a board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"boardID\",response.id);\r",
+									"\r",
+									"pm.test(\"Test validate OK\", validateOK200(pm));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}boards/?name={{boardName}}&key={{key}}&token={{token}}",
+							"host": [
+								"{{URL}}boards"
+							],
+							"path": [
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "{{boardName}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Create a list",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"const listId = response.id;\r",
+									"\r",
+									"pm.environment.set(\"listId\", listId);\r",
+									"\r",
+									"pm.test(\"Validate OK 200\", validateOK200(pm));\r",
+									"\r",
+									"pm.test(\"Check list to have the correct name\",validateName(response,\"listName\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}lists/?name={{listName}}&idBoard={{boardID}}&key={{key}}&token={{token}}",
+							"host": [
+								"{{URL}}lists"
+							],
+							"path": [
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "{{listName}}"
+								},
+								{
+									"key": "idBoard",
+									"value": "{{boardID}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Create a Card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"const cardId = response.id;\r",
+									"\r",
+									"pm.environment.set(\"cardId\", cardId);\r",
+									"\r",
+									"pm.test(\"Validate OK 200\", validateOK200(pm));\r",
+									"\r",
+									"pm.test(\"Check card to have the correct name\",validateName(response,\"cardName\"));\r",
+									"\r",
+									"pm.test(\"Check the card is on the right board\",validateCardBoard(response,\"boardID\"));\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}cards/?name={{cardName}}&idList={{listId}}&key={{key}}&token={{token}}",
+							"host": [
+								"{{URL}}cards"
+							],
+							"path": [
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "{{cardName}}"
+								},
+								{
+									"key": "idList",
+									"value": "{{listId}}"
+								},
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Get the board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"ValidateOK200\",validateOK200(pm));\r",
+									"\r",
+									"pm.test(\"Validate body is not empty\", responseNotEmpty(responseBody));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/boards/{{boardID}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"boards",
+								"{{boardID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
