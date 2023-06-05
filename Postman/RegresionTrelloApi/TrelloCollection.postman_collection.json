@@ -938,6 +938,370 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "TC2 - Update a board and update cards",
+			"item": [
+				{
+					"name": "1. Get a board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"ValidateOK200\",validateOK200(pm));\r",
+									"\r",
+									"pm.test(\"Validate body is not empty\", responseNotEmpty(responseBody));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/boards/{{boardID}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"boards",
+								"{{boardID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Update the board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"pm.environment.set(\"boardName\", response.name);\r",
+									"\r",
+									"pm.test(\"Validate OK 200\",validateOK200(pm));\r",
+									"\r",
+									"pm.test(\"Validate update worked\",validateName(response, \"newBoardName\"));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}boards/{{boardID}}?key={{key}}&token={{token}}&name={{newBoardName}}",
+							"host": [
+								"{{URL}}boards"
+							],
+							"path": [
+								"{{boardID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "name",
+									"value": "{{newBoardName}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Update card name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Validate OK 200\", validateOK200(pm));\r",
+									"\r",
+									"pm.test(\"Check the name and description have changed\", function(){\r",
+									"    pm.expect(response.name).to.eql(\"Updated Card\");\r",
+									"    pm.expect(response.desc).to.eql(\"This card was updated by postman\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Updated Card\",\r\n  \"desc\": \"This card was updated by postman\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/cards/{{cardId}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"cards",
+								"{{cardId}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Get the card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Validate OK 200\", validateOK200(pm));\r",
+									"\r",
+									"pm.test(\"Validate body is not empty\", responseNotEmpty(responseBody));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/cards/{{cardId}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"cards",
+								"{{cardId}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. Get the board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"ValidateOK200\",validateOK200(pm));\r",
+									"\r",
+									"pm.test(\"Validate body is not empty\", responseNotEmpty(responseBody));\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/boards/{{boardID}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"boards",
+								"{{boardID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "TC3 - Delete the board",
+			"item": [
+				{
+					"name": "1. Delete the board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Validate OK 200\",validateOK200(pm));\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/boards/{{boardID}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"boards",
+								"{{boardID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Check the board is not there",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Validate the board is not there\",validate404NotFound(pm));\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/boards/{{boardID}}?key={{key}}&token={{token}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"boards",
+								"{{boardID}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -948,14 +1312,6 @@
 				"exec": [
 					"validateOK200 = function (pm) { ",
 					"    pm.response.to.have.status(200);",
-					"",
-					"}",
-					"validateOK201 = function (pm) { ",
-					"    pm.response.to.have.status(201);",
-					"",
-					"}",
-					"validateOK204 = function (pm) { ",
-					"    pm.response.to.have.status(204);",
 					"}",
 					"responseNotEmpty = function (response){",
 					"    pm.expect(response.length).be.greaterThan(0);",
@@ -965,6 +1321,9 @@
 					"}",
 					"validateCardBoard = function (response, variableName){",
 					"     pm.expect(response.idBoard).to.eql(pm.environment.get(variableName));",
+					"}",
+					"validate404NotFound = function (pm) { ",
+					"    pm.response.to.have.status(404);",
 					"}"
 				]
 			}
