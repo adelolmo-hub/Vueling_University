@@ -2,7 +2,6 @@
 using Albert.Auto.Template.WebPages.Base;
 using OpenQA.Selenium;
 using System.Threading;
-using Albert.Auto.Template.Webpages;
 using OpenQA.Selenium.Support.UI;
 using System;
 using Albert.Auto.Template.Common;

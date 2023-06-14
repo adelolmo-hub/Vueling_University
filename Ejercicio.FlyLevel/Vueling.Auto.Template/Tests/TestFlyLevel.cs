@@ -2,7 +2,6 @@ using AventStack.ExtentReports;
 using NUnit.Framework;
 using Albert.WebPages;
 using System;
-using Albert.Auto.Template.Webpages;
 
 namespace Albert.Auto.Template.Tests
 {

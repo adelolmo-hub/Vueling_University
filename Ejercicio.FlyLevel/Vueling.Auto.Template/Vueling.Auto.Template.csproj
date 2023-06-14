@@ -145,13 +145,14 @@
     <Compile Include="Test.Config\ObjectsTest.cs" />
     <Compile Include="Test.Data\Loaders\LoadScenarioTestCasesConfiguration.cs" />
     <Compile Include="Test.Data\Resources\Models\ScenarioTestCases.cs" />
+    <Compile Include="Tests\TestVueling.cs" />
     <Compile Include="Tests\TestFlyLevel.cs" />
-    <Compile Include="Tests\ExampleTests.cs" />
     <Compile Include="Tests\TestBase.cs" />
     <Compile Include="WebPages.Base\CommonPage.cs" />
     <Compile Include="WebPages.Base\Page.cs" />
-    <Compile Include="WebPages\GooglePage.cs" />
-    <Compile Include="WebPages\GoogleSearch.cs" />
+    <Compile Include="WebPages\FlightSearchPage.cs" />
+    <Compile Include="WebPages\RegisterPageVueling.cs" />
+    <Compile Include="WebPages\HomePageVueling.cs" />
     <Compile Include="WebPages\HomePageFlyLevel.cs" />
   </ItemGroup>
   <ItemGroup>

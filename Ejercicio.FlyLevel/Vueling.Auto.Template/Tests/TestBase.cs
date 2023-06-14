@@ -7,7 +7,6 @@ using System;
 using System.IO;
 using System.Threading;
 using Albert.Auto.Template.SetUp;
-using Albert.Auto.Template.Webpages;
 using Albert.Auto.Template.WebPages.Base;
 
 namespace Albert.Auto.Template.Tests
@@ -60,14 +59,15 @@ namespace Albert.Auto.Template.Tests
     public class TestSetCleanBase
     {
         #region Definitions
-        protected GooglePage googlePage;
-        protected GoogleSearch googleSearch;
         protected Page page;
         protected ISetUpWebDriver setUpWebDriver;
         protected ObjectsTest objectsTest;
         protected ExtentTest test;
         #endregion
-        //DemoBlaze
+        //Vueling
+        protected HomePageVueling homePageVueling;
+        protected RegisterPageVueling registerPageVueling;
+        protected FlightSearchPage flightSearchPage;
         
         //FlyLevel
         protected HomePageFlyLevel homeFly;
